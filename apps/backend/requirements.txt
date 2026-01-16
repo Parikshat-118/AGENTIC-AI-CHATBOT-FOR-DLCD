@@ -1,9 +1,23 @@
 fastapi
-uvicorn[standard]
-pydantic
-python-dotenv
+uvicorn
+
+# LangChain core (REQUIRED)
+langchain
+langchain-core
+
+# Vector DB
 chromadb
-pymupdf
+
+# Google Gemini
 google-generativeai
-httpx
-tenacity
+
+# Utils
+pydantic
+pydantic-settings
+python-dotenv
+
+# PDF
+pypdf
+
+# Optional but recommended
+tqdm
