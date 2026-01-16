@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+chromadb
+pymupdf
+google-generativeai
+httpx
+tenacity
