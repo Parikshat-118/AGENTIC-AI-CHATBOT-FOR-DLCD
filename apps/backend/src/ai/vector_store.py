@@ -1,6 +1,6 @@
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from typing import List
 
 from ..config import get_settings
@@ -25,3 +25,4 @@ def add_documents(documents: List[Document]) -> None:
 
     vector_store.add_documents(documents)
     print(f"✅ Added {len(documents)} documents to vector DB")
+
