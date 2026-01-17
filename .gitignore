@@ -11,8 +11,5 @@ venv/
 node_modules/
 .next/
 
-# Vector DB (do NOT push)
-apps/backend/data/vector_db/
-
 # OS
 .DS_Store
