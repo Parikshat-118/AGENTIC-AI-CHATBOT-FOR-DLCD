@@ -1,25 +1,19 @@
 from langchain_chroma import Chroma
-from langchain_core.documents import Document
-from typing import List
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-from ..config import get_settings
+from src.config import get_settings
 
 settings = get_settings()
 
-# Chroma persists automatically in new versions
-vector_store = Chroma(
-    collection_name=settings.VECTOR_COLLECTION_NAME,
-    persist_directory=str(settings.VECTOR_DB_DIR),
+
+embeddings = GoogleGenerativeAIEmbeddings(
+    model=settings.GEMINI_EMBED_MODEL_NAME,
+    google_api_key=settings.GEMINI_API_KEY,
 )
 
-def add_documents(documents: List[Document]) -> None:
-    """
-    Add documents to Chroma vector store.
-    Persistence is automatic (no .persist() needed).
-    """
-    if not documents:
-        print(" No documents to add")
-        return
 
-    vector_store.add_documents(documents)
-    print(f"✅ Added {len(documents)} documents to vector DB")
+vector_store = Chroma(
+    collection_name=settings.VECTOR_COLLECTION_NAME,  # pdf_chunks
+    persist_directory=str(settings.VECTOR_DB_DIR),    # apps/backend/data/vector_db
+    embedding_function=embeddings,
+)
