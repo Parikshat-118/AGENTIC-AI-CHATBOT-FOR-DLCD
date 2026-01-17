@@ -10,7 +10,8 @@ langchain-core>=0.2.0
 # Chroma
 langchain-chroma>=0.1.0
 chromadb>=0.4.24
-
+langchain-community
+sentence-transformers
 # Google Gemini
 langchain-google-genai>=1.0.6
 google-generativeai>=0.5.0
