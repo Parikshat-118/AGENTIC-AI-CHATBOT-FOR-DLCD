@@ -1,21 +1,22 @@
 fastapi
-uvicorn
-
-# LangChain core
-langchain
-langchain-core
-langchain-community
-
-# Chroma integration (THIS WAS MISSING)
-langchain-chroma
-chromadb
-
-# PDF parsing
-pypdf
-
-# Google Gemini
-google-generativeai
-
-# Utils
+uvicorn[standard]
 python-dotenv
 pydantic-settings
+
+# LangChain core
+langchain>=0.2.0
+langchain-core>=0.2.0
+
+# Chroma
+langchain-chroma>=0.1.0
+chromadb>=0.4.24
+
+# Google Gemini
+langchain-google-genai>=1.0.6
+google-generativeai>=0.5.0
+
+# PDF processing
+pypdf
+
+# Utils
+tqdm
