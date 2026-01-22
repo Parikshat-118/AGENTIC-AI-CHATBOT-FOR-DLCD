@@ -4,19 +4,17 @@ python-dotenv
 pydantic-settings
 
 # LangChain core
-langchain>=0.2.0
 langchain-core>=0.2.0
-
-# Chroma
+langchain>=0.2.0
+langchain-community
 langchain-chroma>=0.1.0
 chromadb>=0.4.24
-langchain-community
-sentence-transformers
-# Google Gemini
-langchain-google-genai>=1.0.6
-google-generativeai>=0.5.0
 
-# PDF processing
+# Gemini
+google-generativeai>=0.5.0
+langchain-google-genai>=1.0.6
+
+# PDF (local only, optional on Render)
 pypdf
 
 # Utils
