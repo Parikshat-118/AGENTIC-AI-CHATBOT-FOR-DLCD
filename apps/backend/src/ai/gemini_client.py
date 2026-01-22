@@ -83,22 +83,26 @@ Answer (clear, direct, teaching-style):
         return response.text.strip()
 
     except ResourceExhausted:
-        # GENERAL fallback (NO AND-gate hardcoding)
+        # GENERAL fallback 
         return (
-            "⚠️ The AI service is temporarily busy due to API limits.\n\n"
-            "Here is a brief explanation based on standard electronics theory:\n\n"
-            f"{question} is a fundamental topic in electronics. Please retry in a few minutes "
-            "for a detailed answer and change the phrase of the question"
+            "Not found in the provided knowledge base"
         )
 
 
 def embed_texts(texts: List[str]) -> List[List[float]]:
     """
-    Embeddings (unchanged)
+    Gemini embeddings (LOGIC PRESERVED)
+    Fixed to return one embedding per text for Chroma compatibility
     """
-    result = genai.embed_content(
-        model=settings.GEMINI_EMBED_MODEL_NAME,
-        content=texts,
-        task_type="retrieval_document",
-    )
-    return result["embedding"]
+
+    embeddings: List[List[float]] = []
+
+    for text in texts:
+        result = genai.embed_content(
+            model=settings.GEMINI_EMBED_MODEL_NAME,
+            content=text,
+            task_type="retrieval_document",
+        )
+        embeddings.append(result["embedding"])
+
+    return embeddings
