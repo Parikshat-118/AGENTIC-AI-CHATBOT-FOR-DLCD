@@ -1,15 +1,13 @@
-# src/ai/agentic_rag.py
-
 from .retriever_agent import retrieve
 from .answer_agent import generate_final_answer
 
-def agentic_answer(query: str, n_results: int = 5) -> dict:
-    # 🔥 ALWAYS retrieve
+
+def agentic_answer(query: str, n_results: int = 3) -> dict:
     documents = retrieve(query=query, n_results=n_results)
 
     final = generate_final_answer(
         query=query,
-        documents=documents,
+        documents=documents[:3],  # HARD LIMIT
         plan=None,
     )
 
@@ -24,9 +22,8 @@ def agentic_answer(query: str, n_results: int = 5) -> dict:
     }
 
 
-def agentic_pdf_answer(query: str, pdf_title: str, n_results: int = 5) -> dict:
-    # 🔥 Retrieve ALL, then filter by title (safe)
-    documents = retrieve(query=query, n_results=20)
+def agentic_pdf_answer(query: str, pdf_title: str, n_results: int = 3) -> dict:
+    documents = retrieve(query=query, n_results=10)
 
     filtered = [
         d for d in documents
@@ -35,7 +32,7 @@ def agentic_pdf_answer(query: str, pdf_title: str, n_results: int = 5) -> dict:
 
     final = generate_final_answer(
         query=query,
-        documents=filtered,
+        documents=filtered[:3],  # HARD LIMIT
         plan=None,
     )
 
