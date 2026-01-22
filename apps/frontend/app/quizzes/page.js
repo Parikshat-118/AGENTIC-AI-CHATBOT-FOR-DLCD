@@ -13,11 +13,11 @@ export default function QuizzesPage() {
 
   // Fetch all PDFs as quiz topics
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/pdfs")
-      .then((res) => res.json())
-      .then((data) => setTopics(data))
-      .catch(console.error);
-  }, []);
+  fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/pdfs`)
+    .then((res) => res.json())
+    .then((data) => setTopics(data))
+    .catch(console.error);
+}, []);
 
   // ✅ ONLY navigate — do NOT fetch quiz here
   const startQuiz = (title) => {
