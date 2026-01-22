@@ -180,7 +180,7 @@ async function sendMessage(e) {
           <div className="flex-1 bg-slate-200 overflow-y-auto md:overflow-hidden">
             {selected && (
               <iframe
-  src={`${selected.url}#toolbar=0`}
+  src={`${decodeURIComponent(selected.url)}#toolbar=0`}
   className="w-full h-[calc(100dvh-120px)] md:h-full border-none"
   title={selected.title}
 />
