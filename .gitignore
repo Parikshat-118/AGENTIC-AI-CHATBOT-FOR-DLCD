@@ -1,0 +1,29 @@
+# =========================
+# Global
+# =========================
+.vscode/
+*.log
+
+# =========================
+# Backend
+# =========================
+apps/backend/.env
+apps/backend/venv/
+
+
+# Python cache
+__pycache__/
+*.pyc
+
+# =========================
+# Frontend
+# =========================
+apps/frontend/node_modules/
+apps/frontend/.next/
+apps/frontend/.env.local
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
