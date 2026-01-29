@@ -13,7 +13,7 @@ export default function QuizzesPage() {
 
   // Fetch all PDFs as quiz topics
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/pdfs")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs`)
       .then((res) => res.json())
       .then((data) => setTopics(data))
       .catch(console.error);
