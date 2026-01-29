@@ -16,6 +16,8 @@ origins = [
     "http://192.168.1.8:3000",
     "http://192.168.1.4:3000",
     "http://10.25.43.144:3000",
+    "https://electromentor.vercel.app",
+    "https://agentic-ai-chatbot-for-dlcd.vercel.app",
 ]
 
 app.add_middleware(
