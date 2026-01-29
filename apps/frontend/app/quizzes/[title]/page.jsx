@@ -101,14 +101,16 @@ export default function QuizPlayPage() {
     const nextIndex = currentIndex + 1;
     setCurrentIndex(nextIndex);
 
-    if (
-      nextIndex % BATCH_SIZE === 1 &&
-      questions.length < TOTAL_QUESTIONS
-    ) {
-      const nextBatch = batch + 1;
-      setBatch(nextBatch);
-      loadBatch(nextBatch);
-    }
+    // Prefetch when entering odd-numbered questions (1, 3, 5...)
+if (
+  (nextIndex + 1) % BATCH_SIZE === 1 &&
+  questions.length < TOTAL_QUESTIONS
+) {
+  const nextBatch = batch + 1;
+  setBatch(nextBatch);
+  loadBatch(nextBatch);
+}
+
   };
 
   const prevQuestion = () => {
