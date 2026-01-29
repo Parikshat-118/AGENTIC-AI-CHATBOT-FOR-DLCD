@@ -69,10 +69,12 @@ export default function QuizPlayPage() {
     setLoading(true);
 
     const res = await fetch(
-      `http://127.0.0.1:8000/quizzes/quiz?pdf_title=${encodeURIComponent(
-        pdfTitle
-      )}&difficulty=${difficulty}&batch=${batchNo}&batch_size=${BATCH_SIZE}`
-    );
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/quizzes/quiz` +
+      `?pdf_title=${encodeURIComponent(pdfTitle)}` +
+      `&difficulty=${difficulty}` +
+      `&batch=${batchNo}` +
+      `&batch_size=${BATCH_SIZE}`
+  );
 
     const data = await res.json();
     setQuestions((prev) => [...prev, ...(data.questions || [])]);
