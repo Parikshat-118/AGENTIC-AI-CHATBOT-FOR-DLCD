@@ -13,7 +13,7 @@ export default function QuizzesPage() {
 
   // Fetch all PDFs as quiz topics
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_UR}/pdfs`)
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/pdfs`)
       .then((res) => res.json())
       .then((data) => setTopics(data))
       .catch(console.error);
