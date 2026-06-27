@@ -1,18 +1,25 @@
 import time
+
 from google import genai
+from google.genai import types
 from google.api_core.exceptions import ResourceExhausted
 from google.genai.errors import ClientError
+
 from ..config import get_settings
 
 settings = get_settings()
 
-# Gemini client (text-only, free tier safe)
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 
-def _generate_with_backoff(prompt: str, temperature: float, max_tokens: int) -> str:
+def _generate_with_backoff(
+    prompt: str,
+    temperature: float,
+    max_tokens: int,
+    thinking_budget: int | None = None,
+) -> str:
     """
-    Internal helper with rate-limit safety.
+    Generic Gemini generator with retry support.
     """
 
     MAX_ATTEMPTS = 3
@@ -20,91 +27,93 @@ def _generate_with_backoff(prompt: str, temperature: float, max_tokens: int) -> 
 
     for attempt in range(MAX_ATTEMPTS):
         try:
+
+            config = types.GenerateContentConfig(
+                temperature=temperature,
+                max_output_tokens=max_tokens,
+            )
+
+            if thinking_budget is not None:
+                config.thinking_config = types.ThinkingConfig(
+                    thinking_budget=thinking_budget
+                )
+
             response = client.models.generate_content(
                 model=settings.GEMINI_MODEL_NAME,
                 contents=prompt,
-                config={
-                    "temperature": temperature,
-                    "max_output_tokens": max_tokens,
-                },
+                config=config,
             )
-            return response.text.strip()
+
+            return response.text.strip() if response.text else ""
 
         except ResourceExhausted:
-            # Gemini quota hit
             time.sleep(BACKOFF_SECONDS * (attempt + 1))
 
         except ClientError as e:
-            # Explicit 429 handling
             if "RESOURCE_EXHAUSTED" in str(e):
                 time.sleep(BACKOFF_SECONDS * (attempt + 1))
             else:
-                raise e
+                raise
 
-    # After retries → fail safely
     return ""
 
 
 def generate_text(prompt: str) -> str:
     """
-    Used by Planner Agent & Quiz Agent
+    Used by Planner Agent & Quiz Agent.
+
+    Thinking is disabled so Gemini spends tokens
+    generating JSON instead of reasoning.
     """
+
     result = _generate_with_backoff(
         prompt=prompt,
         temperature=0.2,
-        max_tokens=512,
+        max_tokens=2048,
+        thinking_budget=0,
     )
 
     if not result:
-        # Planner-safe fallback
         return """
 {
   "search_pdfs": true,
   "topic": "electronics",
-  "reason": "Gemini rate limit fallback",
+  "reason": "Gemini unavailable",
   "k": 5
 }
 """
+
     return result
 
 
 def generate_answer(context: str, question: str) -> str:
     """
-    Used by Answer Agent
+    Used by Answer Agent.
     """
 
     prompt = f"""
 You are an expert Electronics professor and AI tutor.
 
-INSTRUCTIONS (VERY IMPORTANT):
-- The user is a student asking a learning question.
-- The provided study material may be fragmented, indirect, or technical.
-- You MUST give a clear, standard textbook explanation of the concept.
-- Use the study material ONLY to support and ground your explanation,
-  NOT to limit or weaken it.
-- NEVER say phrases like:
-  "the text does not explicitly say"
-  "we can infer"
-  "based on limited information"
-- If the topic is a known electronics concept (logic gate, flip-flop,
-  counter, register, etc.), explain it properly even if PDFs are indirect.
-- Do NOT invent advanced details not relevant to the question.
-- Write in simple, exam-oriented teaching language.
-- If a user did a spelling mistake, correct it and answer the question.
+INSTRUCTIONS:
+- Explain like a textbook.
+- Answer using the supplied study material.
+- Keep the explanation clear and exam-oriented.
+- Correct spelling mistakes automatically.
+- Use headings and bullet points where useful.
 
-Study Material (for grounding only):
+Study Material:
 {context}
 
-Student Question:
+Question:
 {question}
 
-Answer (clear, direct, teaching-style):
+Answer:
 """
 
     result = _generate_with_backoff(
         prompt=prompt,
         temperature=0.3,
-        max_tokens=900,
+        max_tokens=2048,
     )
 
     return result or "Not found in the provided knowledge base"
