@@ -5,8 +5,8 @@ from pathlib import Path
 
 class Settings(BaseSettings):
 
-    GEMINI_API_KEY: str
-    GEMINI_MODEL_NAME: str          # Read from .env (no hardcoded default)
+    GROQ_API_KEY: str
+    GROQ_MODEL_NAME: str       # Read from .env (no hardcoded default)
 
     GEMINI_EMBED_MODEL_NAME: str = "models/embedding-001"
 
