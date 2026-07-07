@@ -27,9 +27,6 @@ fastembed>=0.3.0
 # --------------------
 # Google Gemini (free tier, text only)
 # --------------------
-google-genai>=1.0.0
-google-auth
-google-api-core>=2.11.0
 
 # --------------------
 # PDF parsing (runtime safe)
@@ -40,3 +37,5 @@ pypdf
 # Utilities
 # --------------------
 tqdm
+
+groq>=0.30.0
